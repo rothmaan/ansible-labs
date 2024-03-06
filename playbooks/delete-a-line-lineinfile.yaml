@@ -1,0 +1,11 @@
+---
+- hosts: db01
+  become: yes
+  tasks:
+  - name: add line if it doesn't exist.
+    lineinfile:
+      path: /etc/postfix/main.cf
+    # the below line will be deleted
+      regexp: " directory_directory = yes"
+      state: abent
+      backup: yes

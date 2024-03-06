@@ -1,0 +1,23 @@
+---
+- name: Add nssaudit with sudo NOPASSWD privileges
+  hosts: db01
+  become: true
+
+  tasks:
+    - name: Add nssaudit user
+      user:
+        name: nssaudit
+        state: present
+        createhome: yes
+        shell: /bin/bash
+
+    - name: Set nssaudit password
+      user:
+        name: nssaudit
+        password: "{{ 'xxxx' | password_hash('sha512', 'mysecretsalt') }}"
+
+    - name: Add user to sudoers
+      lineinfile:
+        path: /etc/sudoers
+        line: "nssaudit ALL=(ALL) NOPASSWD: ALL"
+        validate: 'visudo -cf %s'

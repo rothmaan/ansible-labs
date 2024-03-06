@@ -1,0 +1,28 @@
+- name: Add users if not exists
+  hosts: db01
+  become: yes
+  tasks:
+    - name: Create group if not exists
+      group:
+        name: pipvrf
+        state: present
+    - name: Create users
+      user:
+        name: "{{ item.name }}"
+        comment: "{{ item.comment }}"
+        groups: "{{ item.groups }}"
+        shell: "{{ item.shell }}"
+        password: "{{ 'changeme' | password_hash('sha512') }}"
+        update_password: always
+        expire: -1
+      loop:
+        - { name: ashohe2, comment: "hesham ashour", groups: "users,pipvrf", shell: "/bin/bash" }
+        - { name: baezom6, comment: "omary baez", groups: "users,pipvrf", shell: "/bin/bash" }
+        - { name: bailka9, comment: "katrina bailey-gadson", groups: "users,pipvrf", shell: "/bin/bash" }
+        - { name: bouzami, comment: "michael bouzaglo", groups: "users,pipvrf", shell: "/bin/bash" }
+        - { name: chima9g, comment: "martin chileshe", groups: "users,pipvrf", shell: "/bin/bash" }
+        - { name: devaljo, comment: "john devalis", groups: "users,pipvrf", shell: "/bin/bash" }
+        - { name: v808271, comment: "david dibble", groups: "users,pipvrf", shell: "/bin/bash" }
+        - { name: v151651, comment: "minh dinh", groups: "users,pipvrf", shell: "/bin/bash" }
+        - { name: v793188, comment: "phillip gay", groups: "users,pipvrf", shell: "/bin/bash" }
+        - { name: v803254, comment: "glenn s glass", groups: "users,pipvrf", shell: "/bin/bash" }

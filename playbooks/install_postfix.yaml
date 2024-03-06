@@ -1,0 +1,23 @@
+---
+- hosts: db01
+  become: yes
+  tasks:
+    - name: Install Postfix on DB01 server
+      yum: name=postfix state=absent
+
+    - name:  Ensure Postfix service is running
+      service: name=postfix state=started
+
+    - name:  Enable postfix on system boot
+      service: name=postfix enabled=yes
+
+    - name: Install sendmail package on DB server
+      yum: name=sendmail state=absent
+      tags:
+        - sendmail
+
+    - name: Ensure Sendmail service is started 
+      service: name=sendmail state=started
+
+    - name: Ensure Sendmail is enabled on system boot
+      service: name=sendmail enabled=yes

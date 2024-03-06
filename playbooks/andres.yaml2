@@ -1,0 +1,108 @@
+- name: Add users if not exists
+  become: yes
+  users:
+    name: ashohe2
+    comment: hesham ashour
+    groups: users,pipvrf
+    shell: /bin/bash
+    password: "{{ 'changeme' | password_hash('sha512') }}"
+    update_password: always
+
+  - name: Add user if not exists
+    become: yes
+    user:
+      name: baezom6
+      comment: omary baez
+      groups: users,pipvrf
+      shell: /bin/bash
+      password: "{{ 'changeme' | password_hash('sha512') }}"
+      update_password: always
+
+  - name: Add user if not exists
+    become: yes
+    user:
+      name: bailka9
+      comment: katrina bailey-gadson
+      groups: users,pipvrf
+      shell: /bin/bash
+      password: "{{ 'changeme' | password_hash('sha512') }}"
+      update_password: always
+
+  - name: Add user if not exists
+    become: yes
+    user:
+      name: bouzami
+      comment: michael bouzaglo
+      groups: users,pipvrf
+      shell: /bin/bash
+      password: "{{ 'changeme' | password_hash('sha512') }}"
+      update_password: always
+
+  - name: Add user if not exists
+    become: yes
+    user:
+      name: chima9g
+      comment: martin chileshe
+      groups: users,pipvrf
+      shell: /bin/bash
+      password: "{{ 'changeme' | password_hash('sha512') }}"
+      update_password: always
+
+  - name: Add user if not exists
+    become: yes
+    user:
+      name: devaljo
+      comment: john devalis
+      groups: users,pipvrf
+      shell: /bin/bash
+      password: "{{ 'changeme' | password_hash('sha512') }}"
+      update_password: always
+
+  - name: Add user if not exists
+    become: yes
+    user:
+      name: v808271
+      comment: david dibble
+      groups: users,pipvrf
+      shell: /bin/bash
+      password: "{{ 'changeme' | password_hash('sha512') }}"
+      update_password: always
+
+  - name: Add user if not exists
+    become: yes
+    user:
+      name: v151651
+      comment: minh dinh
+      groups: users,pipvrf
+      shell: /bin/bash
+      password: "{{ 'changeme' | password_hash('sha512') }}"
+      update_password: always
+
+  - name: Add user if not exists
+    become: yes
+    user:
+      name: v793188
+      comment: phillip gay
+      groups: users,pipvrf
+      shell: /bin/bash
+      password: "{{ 'changeme' | password_hash('sha512') }}"
+      update_password: always
+
+  - name: Add user if not exists
+    become: yes
+    user:
+      name: v803254
+      comment: glenn s glass
+      groups: users,pipvrf
+      shell: /bin/bash
+      password: "{{ 'changeme' | password_hash('sha512') }}"
+      update_password: always
+
+  - name: Add user if not exists
+    become: yes
+    user:
+      name: v817087
+      comment: craig higgs
+      groups:
+
+

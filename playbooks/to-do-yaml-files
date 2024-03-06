@@ -1,0 +1,5 @@
+1. Add line in the file if it doesn't exist
+2. Commentout a line
+3. Replace a line with other string
+4. Insert a line before a specific line
+5. Delete a line

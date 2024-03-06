@@ -1,0 +1,33 @@
+---
+- name: Using the copy module
+  hosts:  all
+  become: yes
+  tasks:
+    - name: Create rothman group
+      group:
+        name: rothman
+        state: present
+ 
+    - name: Create rothman user
+      user:
+        name: rothman
+        group: rothman
+ 
+    - name: Give sudo access to rothman user
+      blockinfile:
+        path: /etc/sudoers
+        insertafter: 'root    ALL=(ALL)       ALL'
+        block: |
+          # Gives sudo access to the rothman group
+          %rothman        ALL=(ALL)       NOPASSWD: ALL
+
+    - name: install elink package
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_distribution == "CentOS"
+    - name: install elink package
+      apt:
+        update_cache: yes
+        upgrade: dist
+      when: ansible_distribution == "Ubuntu"

@@ -1,0 +1,79 @@
+# This playbook performs the following steps:
+
+# 1. Gather facts about bond interfaces on the target hosts.
+# 2. Identify the active and backup slave interfaces.
+# 3. Set the active slave interface to down.
+# 4. Wait for 10 seconds for the failover to occur.
+# 5. Ping test after failover.
+# 6. Set the original active slave interface back to up.
+# 7. Wait for 10 seconds for the failback to occur.
+# 8. Ping test after failback.
+# 9. Gather facts about bond interfaces after failback.
+# 10. Identify the active and backup slave interfaces after the failback.
+# 11. Check if the failback occurred successfully.
+---
+- name: Test failover and failback of bonding interface
+  hosts: all
+  become: yes
+  tasks:
+    - name: Gather facts about bond interfaces
+      ansible.builtin.setup:
+        filter: ansible_bond*
+
+    - name: Get active and backup slave interfaces
+      set_fact:
+        active_slave: "{{ item.value.active_slave }}"
+        backup_slaves: "{{ item.value.slaves | difference([item.value.active_slave]) }}"
+      loop: "{{ ansible_facts | dict2items }}"
+      when: "'bond' in item.key"
+
+    - name: Show active and backup slave interfaces
+      debug:
+        var: (active_slave, backup_slaves)
+
+    - name: Set active slave interface to down
+      ansible.builtin.command: "ip link set {{ active_slave }} down"
+      register: result
+      changed_when: False
+
+    - name: Wait for 10 seconds for failover
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: Ping test after failover
+      ansible.builtin.ping:
+
+    - name: Set the original active slave interface back to up
+      ansible.builtin.command: "ip link set {{ active_slave }} up"
+      register: result
+      changed_when: False
+
+    - name: Wait for 10 seconds for failback
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: Ping test after failback
+      ansible.builtin.ping:
+
+    - name: Gather facts about bond interfaces after failback
+      ansible.builtin.setup:
+        filter: ansible_bond*
+
+    - name: Get active and backup slave interfaces after failback
+      set_fact:
+        active_slave_after_failback: "{{ item.value.active_slave }}"
+        backup_slaves_after_failback: "{{ item.value.slaves | difference([item.value.active_slave]) }}"
+      loop: "{{ ansible_facts | dict2items }}"
+      when: "'bond' in item.key"
+
+    - name: Show active and backup slave interfaces after failback
+      debug:
+        var: (active_slave_after_failback, backup_slaves_after_failback)
+
+    - name: Check if failback occurred successfully
+      assert:
+        that:
+          - "active_slave == active_slave_after_failback"
+        fail_msg: "Failback test failed"
+        success_msg: "Failback test succeeded"
+...

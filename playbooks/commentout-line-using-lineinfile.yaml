@@ -1,0 +1,14 @@
+---
+- hosts: db01
+  become: yes
+  tasks:
+  - name: comment out a line 
+    lineinfile:
+      path: /etc/postfix/main.cf
+      # the string to search for comment
+      regexp:  '(^daemon_directory. *)'
+      # commentout the line
+      line: '# \1'
+      backrefs: yes
+      state: present
+      backup: yes

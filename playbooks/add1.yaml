@@ -1,0 +1,37 @@
+---
+- name: Create user accounts and set primary/secondary groups
+  hosts: db01
+  become: yes
+  tasks:
+
+  vars:
+
+    users:
+      - name: alice
+        full_name: Alice Smith
+        primary_group: developers
+        secondary_group: devops
+        state: present
+      - name: bob
+        full_name: Bob Johnson
+        primary_group: developers
+        secondary_group: devops
+        state: present
+
+
+
+  tasks:
+    - name: Create user accounts and set passwords
+      user:
+        name: "{{ item.name }}"
+        comment: "{{ item.full_name }}"
+        group: "{{ item.primary_group }}"
+        group: "{{ item.secondary_group }}"
+        state: present
+        shell: /bin/bash
+        password: "{{ 'change' | password_hash('sha512') }}"
+          #       update_password: always
+        expire: -1
+      loop: "{{ users }}"
+
+

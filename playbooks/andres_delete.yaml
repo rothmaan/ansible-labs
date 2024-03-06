@@ -1,0 +1,31 @@
+- name: Delete users and group
+  hosts: db01
+  become: yes
+  tasks:
+    - name: Delete users
+      user:
+        name: "{{ item }}"
+        state: absent
+      loop:
+        - ashohe2
+        - baezom6
+        - bailka9
+        - bouzami
+        - chima9g
+        - devaljo
+        - v808271
+        - v151651
+        - v793188
+        - v803254
+        - v817087
+
+    - name: Delete group
+      group:
+        name: pipvrf
+        state: absent
+
+
+
+
+
+

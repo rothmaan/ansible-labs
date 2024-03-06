@@ -1,0 +1,13 @@
+---
+- hosts: db01
+  become: True
+  vars:
+    project_name: /var/www/html
+    service_name: httpd
+    file_name: index.html
+  tasks:
+  - name: Install Webserver
+    package: pkg=name={{service_name}} state=latest
+  - name: Start webserver service 
+    service name={{service_name}} state=started
+

@@ -1,0 +1,5 @@
+- name: Initialize Tenable Nessus Agent
+  hosts: all
+  tasks:
+    - include_vars: vars/main.yaml
+    - include_tasks: tasks/main.yaml

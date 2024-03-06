@@ -1,0 +1,16 @@
+#[control] Using my MacBook as Ansible control node
+
+[proxy] 
+loadbalancer
+
+[webservers] 
+web01
+web02
+
+[database] 
+db01
+
+[webstack:children] 
+proxy 
+webservers 
+database

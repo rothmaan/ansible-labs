@@ -1,0 +1,57 @@
+---
+- name: Test failover and failback of bonding interface
+  hosts: db01
+  become: yes
+  tasks:
+    - name: Gather facts about network interfaces
+      ansible.builtin.setup:
+        filter: ansible_interfaces
+
+    - name: Get bonded interfaces
+      set_fact:
+        bonded_interfaces: "{{ ansible_interfaces | select('match', '^bond.*') | list }}"
+
+    - name: Show bonded interfaces
+      debug:
+        var: bonded_interfaces
+
+    - name: Get the bond details for each bonded interface
+      command: cat /proc/net/bonding/{{ item }}
+      register: bond_details
+      loop: "{{ bonded_interfaces }}"
+      changed_when: False
+
+    - name: Extract active and backup slave interfaces from bond details
+      set_fact:
+        active_slave: "{{ item.stdout | regex_search('Currently Active Slave: (\\S+)', '\\1') }}"
+        backup_slaves: "{{ item.stdout | regex_findall('Slave Interface: (\\S+)', '\\1') | difference([active_slave]) }}"
+      loop: "{{ bond_details.results }}"
+      register: slave_info
+
+    - name: Set active slave interface to down
+      ansible.builtin.command: "ip link set {{ item.item.active_slave }} down"
+      register: result
+      changed_when: False
+      loop: "{{ slave_info.results }}"
+
+    - name: Wait for 10 seconds for failover
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: Ping test after failover
+      ansible.builtin.ping:
+
+    - name: Set the original active slave interface back to up
+      ansible.builtin.command: "ip link set {{ item.item.active_slave }} up"
+      register: result
+      changed_when: False
+      loop: "{{ slave_info.results }}"
+
+    - name: Wait for 10 seconds for failback
+      ansible.builtin.pause:
+        seconds: 10
+
+    - name: Ping test after failback
+      ansible.builtin.ping:
+...
+

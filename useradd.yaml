@@ -1,0 +1,75 @@
+---
+- hosts: all
+  gather_facts: False 
+  user: root
+  become: yes
+  tasks:
+
+    - name: Create Usear
+      user:
+        name: rothman
+          #      groups: sudo 
+        create_home: true
+        comment: 'Ansible Managment Account'
+        expires: -1
+
+    - name: Setup PasswordLess Authentication 
+      authorized_key:
+        user: rothman
+        state: present
+        key: "{{ lookup('file', '/Users/rothman/.ssh/id_rsa.pub') }}"
+
+    - name: Setup Sudo access for roth
+      copy:
+        dest: /etc/sudoers.d/rothman
+        content: 'rothman ALL=(ALL) NOPASSWD: ALL'
+        validate: /usr/sbin/visudo -cf %s
+
+    - name: Add provision user to the sudoers
+      copy:
+        dest: "/etc/sudoers.d/provision"
+        content: "provision  ALL=(ALL)  NOPASSWD: ALL"
+
+    - name: Deploy SSH Key
+      authorized_key:
+        user: rothman 
+        key: "{{ lookup('file', '/Users/rothman/.ssh/id_rsa.pub') }}"
+        state: present
+
+    - name: "Disable Password Authentication"
+      lineinfile:
+        dest: "/etc/ssh/sshd_config"
+        regexp: '^PasswordAuthentication'
+        line: "PasswordAuthentication no"
+        state: present
+        backup: yes
+      notify:
+        - restart ssh
+
+    - name: Disable Root Login
+      lineinfile:
+        dest: /etc/ssh/sshd_config
+        regexp: '^PermitRootLogin'
+        line: "PermitRootLogin no"
+        state: present
+        backup: yes
+      notify:
+        - restart ssh
+
+  handlers:
+    - name: restart ssh
+      service:
+       name: sshd
+       state: restarted
+
+
+  #  - name: Install EPEL repo
+  #    yum:
+  #     name: epel-release
+  #     state: present
+
+  #  - name: Install Python
+  #    become: yes
+  #    yum:
+  #     name: python
+  #     state: present

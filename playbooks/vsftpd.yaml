@@ -1,0 +1,20 @@
+---
+- hosts: all
+  become: yes
+  tasks:
+    - name: Install vsftpd packge
+      package:
+        name: vsftpd
+        state: latest
+      when: ansible_os_family == "Redhat"
+
+    - name: Enable vsftpd service
+      service:
+        name: vsftpd
+        state: started
+
+    - name: Enable vsftpd on boot
+      service:
+        name: vsftpd
+        state: started
+        enabled: yes

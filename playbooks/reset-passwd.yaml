@@ -1,0 +1,15 @@
+---
+- hosts: web01
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: backup shadow/passwd files
+      shell: |
+        cp /etc/shadow /etc/shadow.org
+        cp /etc/passwd /etc/passwd.org
+
+    - name: Update Root user's Password
+      user:
+       name: root
+       update_password: always
+       password: "{{ 'vagrant' | password_hash('sha512') }}"

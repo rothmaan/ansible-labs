@@ -1,0 +1,13 @@
+---
+- hosts: db01
+  become: yes
+  tasks:
+  - name: add line if it doesn't exist.
+    lineinfile:
+      path: /etc/postfix/main.cf
+    # string to search
+      regexp: '# directory_directory .*'
+    # the line toadd
+      line: "ServerAdmin rothmaan"
+      state: present
+      backup: yes

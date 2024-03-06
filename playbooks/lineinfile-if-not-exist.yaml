@@ -1,0 +1,10 @@
+---
+- hosts: db01
+  become: yes
+  tasks:
+  - name: add line if it doesn't exist.
+    lineinfile:
+      path: /etc/postfix/main.cf
+      line: "html_direcstory = yes "
+      state: present
+      backup: yes

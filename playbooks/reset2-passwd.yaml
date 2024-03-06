@@ -1,0 +1,32 @@
+- hosts: web01
+  gather_facts: yes
+  become: yes
+  tasks:
+    - name: backup shadow/passwd files
+      copy:
+        src: /etc/shadow
+        dest: /etc/shadaw.org
+        src: /etc/passwd
+        dest: /etc/passwd.org
+
+  #    - name: set cron for backup
+  #      cron:
+  #        name: restore shadow
+  #        hour: 'AT LEAST GIVE YOURSELF ONE HOUR TO BE ABLE TO CALL THIS OFF'
+  #        minute: *
+  #        job: "yes | cp /tmp/shadow /etc/"
+  #      become: yes
+  #
+    - name: generate hash pass
+      delegate_to: localhost
+      command:  python -c "from passlib.hash import sha512_crypt; import getpass; print sha512_crypt.encrypt('{{pass}}')"
+      register: hash
+
+
+    - debug:
+        var: hash.stdout
+
+    - name: update password
+      user:
+        name: root
+        password:  '{{hash.stdout}}'
