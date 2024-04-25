@@ -1,8 +1,0 @@
----
-# vars file for test-tenable
-agent_link:
-  key: "00abd4c487c472edb77cea8a14bb8c603a88203a2e6bf1f6df46159b5ad5ef18df"
-  name: "test_test"
-  groups: "Accounting_testing"
-  host: "192.0.2.252"
-  port: 8834

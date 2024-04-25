@@ -1,23 +1,25 @@
 [defaults]
 
-#[webservers]
-#web01
-#web02
+[webservers]
+web01
+web02
 
-#[database]
-#db01
+[database]
+db01
 
-#[haproxy]
-#proxy
+[haproxy]
+proxy
 
 
-#[webstack:children]
-#haproxy
-#webservers
-#database
+[webstack:children]
+haproxy
+webservers
+database
 
-#[vmware]
+[vmware]
 
+[hp]
+192.168.1.100 
 
 
 
