@@ -1,25 +1,25 @@
 [defaults]
 
-[webservers]
+[websvc]
 web01
 web02
 
-[database]
+[db]
 db01
 
-[haproxy]
-proxy
+[dns]
+dns
 
 
 [webstack:children]
-haproxy
-webservers
-database
+dns
+websvc
+db
 
-[vmware]
+#[vmware]
 
-[hp]
-192.168.1.100 
+#[hp]
+#192.168.1.100 
 
 
 
